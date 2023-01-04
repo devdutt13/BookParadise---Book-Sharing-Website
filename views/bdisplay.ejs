@@ -1,0 +1,32 @@
+<%- include("menu") -%>
+<html>
+    <head>
+        <title>Books</title>
+        <link rel="stylesheet" href="/css/bstyle.css">
+    </head>
+    <body>
+         <h1>Book Collection</h1>
+         <% if (message.length > 0) { %>
+            <h2><%= message %></h2>
+            <% } %>
+            <form action="/bsearch" method="POST">
+                <input type="text" name="searchquery" placeholder="Search By Book Name, Author, Genre"> 
+                <button class="button1" type="submit" name="submit">Search</button>
+                </form>
+         <% books.forEach(function(book){ %>
+            <div class="column">
+            <div class="card">
+                <a href="booktemplate/<%=book._id %>">  
+                <span> <%=book.btitle %></span>
+                <img  src="images/b[3].jpg"> <br>
+            </a> 
+                <span class="span1">Author: <%=book.bauthor %></span>   
+                <span class="span1">Genre: <%=book.genre %></span>
+              </div>   
+            
+            </div>
+            <% }); %> 
+    
+        
+    </body>
+</html>

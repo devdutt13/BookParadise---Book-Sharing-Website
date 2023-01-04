@@ -1,0 +1,36 @@
+<%- include("menu") -%>
+<html>
+    <head>
+        <title>Register</title>
+        <link rel="stylesheet" href="/css/pstyle.css">
+    </head>
+    <body>
+       
+            <div class="form1"> 
+                <h1>Profile</h1>
+               <% if (message.length > 0) { %>
+                 <h2><%= message %></h2>
+                <% } %>
+                    <label for="name">Name</label>
+                    <p><%=currentUser.name %></p>
+                    <label for="username">Username</label>
+                    <p><%=currentUser.username %></p>
+                    <label for="password">Password</label>
+                     <p class=a1><%=pass%></p>
+                     <button class="button1"><a href="/passdisplay/<%=pshow %>"><%=pshow%></a></button>
+                     <label for="books">Books Uploaded</label>
+                     <% books.forEach(function(book){ %>
+                      <div>
+                            <a class="a1"href="booktemplate/<%=book.btitle %>"><%=book.btitle %></a> 
+                            <button class="button3"><a href="/del/<%=book._id %>">Delete</a> </button>
+                        </div>
+                    
+                        <% }); %> 
+                        <button class="button2"><a href="/changepass">Change Password</a></button>
+
+                     
+                     
+            </div>
+        
+    </body>
+</html>

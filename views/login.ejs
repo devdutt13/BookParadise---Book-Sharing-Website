@@ -1,0 +1,25 @@
+
+<%- include("menu") -%>
+<html>
+    <head>
+        <title>Login</title>
+        <link rel="stylesheet" href="/css/lstyle.css">
+    </head>
+    <body>
+        <div class="form1">
+        <h1>Login</h1>
+        <% if (message.length > 0) { %>
+            <h2><%= message %></h2>
+            <% } %>
+            
+        <form action="/login" method="POST">
+            <label for="username">Username</label>
+            <input type="email" name="username"> 
+            <label for="password">Password</label>
+            <input type="password" name="password"> 
+            <button class="button1" type="submit" name="submit">Login</button>
+             <a href="/forgot">Forgot Password</a>
+            </form>
+        </div>
+    </body>
+</html>

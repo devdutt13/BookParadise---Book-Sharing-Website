@@ -1,0 +1,28 @@
+<%- include("menu") -%>
+<html>
+    <head>
+        <title>Upload Book</title>
+        <link rel="stylesheet" href="/css/ustyle.css">
+    </head>
+    <body>
+        <div class="form1">
+        <form action="/book" enctype="multipart/form-data" method="POST">
+            <h1>Book Information</h1>
+            <label for="bname">Book Title</label>
+            <input type="text" name="bname" required>
+            <label for="author">Author</label>
+            <input type="text" name="author" required> 
+            <label for="Genre">Genre</label>
+            <input type="text" name="genre" required> 
+            <label for="BookSummary">Book Summary/Description</label>
+           <textarea name="booksum" cols="58" rows="10" required></textarea> 
+            <label for="bookfile">Upload the Book</label>
+            <input type="file" name="bookfile" required> 
+            <label  for="TC"> <a href="/tcbook"><label  for="TC">Terms and Conditions </a></label>
+            <input type="checkbox" name="tc" value="Y" required> I Agree
+            <button  class ="button1" type="submit" name="submit" value="Upload">Upload</button>
+            </form>
+        </div>
+    </body>
+    </body>
+</html>
