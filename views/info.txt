@@ -1,0 +1,1 @@
+This folder contains ejs templates used in the project
