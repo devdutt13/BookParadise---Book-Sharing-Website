@@ -1,0 +1,1 @@
+This folder contains the css stylesheets used in the project
