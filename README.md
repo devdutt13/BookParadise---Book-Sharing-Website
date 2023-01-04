@@ -1,6 +1,6 @@
 # BookParadise---Book-Sharing-Website
 A book sharing website created using NodeJS, EJS, ExpressJS and MongoDB. <br>
-The website allows users to:
+The website allows users to: <br>
 •	To sign up and become a registered user and then login later to use website <br>
 •	To download the books they want (if available on website) and upload books they want to share with others on website  <br>
 •	To write reviews about the books and have discussions with other users about it through comments <br>
