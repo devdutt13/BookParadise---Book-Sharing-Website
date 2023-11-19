@@ -3,23 +3,37 @@
 <html>
     <head>
         <title>Login</title>
-        <link rel="stylesheet" href="/css/lstyle.css">
+        <link rel="stylesheet" href="/css/style.css">
     </head>
-    <body>
-        <div class="form1">
-        <h1>Login</h1>
-        <% if (message.length > 0) { %>
-            <h2><%= message %></h2>
-            <% } %>
+    <body class="bg-slate-700">
+    <div class="bg-grey-lighter min-h-screen flex flex-col"> 
+        <div class="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
             
-        <form action="/login" method="POST">
-            <label for="username">Username</label>
-            <input type="email" name="username"> 
-            <label for="password">Password</label>
-            <input type="password" name="password"> 
-            <button class="button1" type="submit" name="submit">Login</button>
-             <a href="/forgot">Forgot Password</a>
-            </form>
+            <form class="bg-white px-6 py-8 rounded shadow-md text-black w-full" action="/login" method="POST">
+                <h1 class="mb-8 text-3xl text-center">Login</h1>
+                <% if (message.length > 0) { %>
+                 <h2><%= message %></h2>
+                <% } %>
+                <input
+                class="block border border-grey-light w-full p-3 rounded mb-4" 
+                type="email" 
+                name="username"
+                placeholder="Username"> 
+                <input 
+                class="block border border-grey-light w-full p-3 rounded mb-4"
+                type="password" 
+                name="password"
+                placeholder="password"> 
+                <button class="w-full text-center py-3 rounded bg-green-700 text-white hover:bg-green-dark focus:outline-none my-1" type="submit" name="submit">Login</button>
+                 <div class="text-center text-sm text-grey-dark mt-4">
+                    <a class="no-underline border-b border-grey-dark text-grey-dark" href="/forgot">
+                        Forgot Password
+                    </a>
+                </div>
+                </form>
         </div>
+
+    </div>
+        
     </body>
 </html>
