@@ -2,7 +2,9 @@
 <html>
     <head>
         <title>Register</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="/css/style.css">
+        
     </head>
     <body class="bg-slate-700">
         <div class="bg-grey-lighter min-h-screen flex flex-col">
@@ -12,22 +14,23 @@
                <% if (message.length > 0) { %>
                  <h2><%= message %></h2>
                 <% } %>
-                    <label for="name">Name</label>
+                    <label class="text-xl font-medium" for="name">Name</label>
                     <p  class="block bg-slate-300 border border-grey-light w-full p-3 rounded mb-4"><%=currentUser.name %></p>
-                    <label for="username">Username</label>
+                    <label class="text-xl font-medium" for="username">Username</label>
                     <p  class="block bg-slate-300 border border-grey-light w-full p-3 rounded mb-4" ><%=currentUser.username %></p>
-                    <label for="password">Password</label>
-                     <p class="block bg-slate-300 border-grey-light w-full p-3 rounded mb-4"><%=pass%></p>
-                     <button class="button1"><a href="/passdisplay/<%=pshow %>"><%=pshow%></a></button>
-                     <label for="books">Books Uploaded</label>
+                    <label class="text-xl font-medium" for="password">Password</label>
+                     <p class="block bg-slate-300 border-grey-light w-full p-3 rounded "><%=pass%></p>
+                     <span class="text-base block w-full mr-20"><a href="/changepass"> <i>Change Password</i> </a></span>
+                     <!-- <button ><a href="/passdisplay/<%=pshow %>"><%=pshow%></a></button> -->
+                     <label class="text-xl font-medium" for="books">Books Uploaded</label>
                      <% books.forEach(function(book){ %>
                       <div>
-                            <a class="a1"href="booktemplate/<%=book.btitle %>"><%=book.btitle %></a> 
-                            <button class="button3"><a href="/del/<%=book._id %>">Delete</a> </button>
+                            <a class="text-base mb-4 mr-4" href="booktemplate/<%=book.btitle %>"> <i> <%=book.btitle %> </i></a> 
+                            <a href="/del/<%=book._id %>"><i style="font-size:18px;color:red" class="fa fa-trash-o"></i></a>
                         </div>
                     
                         <% }); %> 
-                        <button class="button2"><a href="/changepass">Change Password</a></button>
+                        
 
                     </div>
                     </div> 
