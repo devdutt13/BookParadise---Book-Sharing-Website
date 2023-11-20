@@ -2,21 +2,22 @@
 <html>
     <head>
         <title>Register</title>
-        <link rel="stylesheet" href="/css/pstyle.css">
+        <link rel="stylesheet" href="/css/style.css">
     </head>
-    <body>
-       
-            <div class="form1"> 
-                <h1>Profile</h1>
+    <body class="bg-slate-700">
+        <div class="bg-grey-lighter min-h-screen flex flex-col">
+            <div class="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
+            <div class="bg-white px-6 py-8 rounded shadow-md text-black w-full">
+                <h1 class="mb-8 text-3xl text-center">Profile</h1>
                <% if (message.length > 0) { %>
                  <h2><%= message %></h2>
                 <% } %>
                     <label for="name">Name</label>
-                    <p><%=currentUser.name %></p>
+                    <p  class="block bg-slate-300 border border-grey-light w-full p-3 rounded mb-4"><%=currentUser.name %></p>
                     <label for="username">Username</label>
-                    <p><%=currentUser.username %></p>
+                    <p  class="block bg-slate-300 border border-grey-light w-full p-3 rounded mb-4" ><%=currentUser.username %></p>
                     <label for="password">Password</label>
-                     <p class=a1><%=pass%></p>
+                     <p class="block bg-slate-300 border-grey-light w-full p-3 rounded mb-4"><%=pass%></p>
                      <button class="button1"><a href="/passdisplay/<%=pshow %>"><%=pshow%></a></button>
                      <label for="books">Books Uploaded</label>
                      <% books.forEach(function(book){ %>
@@ -28,8 +29,8 @@
                         <% }); %> 
                         <button class="button2"><a href="/changepass">Change Password</a></button>
 
-                     
-                     
+                    </div>
+                    </div> 
             </div>
         
     </body>

@@ -2,31 +2,45 @@
 <html>
     <head>
         <title>Books</title>
-        <link rel="stylesheet" href="/css/bstyle.css">
-    </head>
-    <body>
-         <h1>Book Collection</h1>
-         <% if (message.length > 0) { %>
+        <link rel="stylesheet" href="/css/style.css">
+    </head> 
+    <body class="bg-slate-700">
+        <div class="container mx-auto p-4 mt-8">
+            <h1 class="text-slate-200 text-4xl font-bold mb-8 text-center mt-4">Book Collection</h1>
+            
+            <% if (message.length > 0) { %>
             <h2><%= message %></h2>
             <% } %>
-            <form action="/bsearch" method="POST">
-                <input type="text" name="searchquery" placeholder="Search By Book Name, Author, Genre"> 
-                <button class="button1" type="submit" name="submit">Search</button>
-                </form>
-         <% books.forEach(function(book){ %>
-            <div class="column">
-            <div class="card">
-                <a href="booktemplate/<%=book._id %>">  
-                <span> <%=book.btitle %></span>
-                <img  src="images/b[3].jpg"> <br>
-            </a> 
-                <span class="span1">Author: <%=book.bauthor %></span>   
-                <span class="span1">Genre: <%=book.genre %></span>
-              </div>   
+            <form class="flex" action="/bsearch" method="POST">
+                <input class="block border border-grey-light w-2/5 p-2 rounded ml-96 mb-4 mr-2" type="text" name="searchquery" placeholder="Search By Book Name, Author, Genre"> 
+                <button class="w-24 bg-slate-500 h-11 p-2 uppercase font-medium tracking-wider border border-white text-slate-100 rounded" type="submit" name="submit">Search</button>
+            </form>
             
+        <div class="flex flex-row">
+                
+         <% books.forEach(function(book){ %>
+
+            <div class="flex flex-wrap space-x-4 inline-block justify-center mb-6 w-1/3">
+                <div class="bg-zinc-300 rounded-lg shadow-md p-6 flex flex-col items-center w-11/12">
+                    <a href="booktemplate/<%=book._id %>"> 
+                    <img src="images/bookimage.png" class="rounded-lg h-96 w-11/12" alt="a">
+                     </a> 
+                    <div class="w-full mt-4">
+                        <h3 class="text-xl font-bold text-gray-900"> <%=book.btitle %></h3>
+                        <p class="text-lg text-justify text-gray-600">
+                          <i><%=book.bauthor %></i>  
+                        </p>
+                        <p class="text-lg bg-zinc-500 uppercase text-justify text-gray-100 border border-gray-400 mt-1 pl-1 w-20">
+                            <%=book.genre %>
+                        </p>
+                
+                    </div>
+                </div>
+             </div>
+              <% }); %> 
+
             </div>
-            <% }); %> 
-    
-        
+        </div>
+         
     </body>
 </html>

@@ -143,8 +143,13 @@ app.get("/author", function (req, res) {
   res.render('author');
 });
 app.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/home');
+  req.logout(function(err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Internal Server Error');
+    }
+    res.redirect('/home');
+  });
 });
 app.get("/book", function (req, res) {
   if (req.isAuthenticated()) {
@@ -169,14 +174,17 @@ app.get("/tcbook", function (req, res) {
   res.render('tcupload');
 });
 app.get("/profile", function (req, res) {
-  Book.find({buploader:req.user.username}, function (err, books) {
+  Book.find({buploader:req.user.username}). then(books => {
     res.render("pdisplay", {
       books: books,
       pass: '***********',
       pshow:'Show',
       message:''
     });
-  });
+  }).catch(err => {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  });;
 });
 app.get("/passdisplay/:pshw", function (req, res) {
   pshow1=req.params.pshw
@@ -456,13 +464,13 @@ app.post("/bsearch", function (req, res) {
   Book.findOneAndUpdate(
     { _id: bid },
     { $push: { comments: com } },
-    function (error, success) {
-      if (error) {
-        console.log(error);
-      } 
-
-    });
-  res.redirect('back');
+   ).then(success =>{
+    res.redirect('back');
+   }).catch(err =>{
+    console.log(err);
+    res.status(500).send('Internal Server Error');
+   })
+ 
 });
 app.post("/rat/:bid", function (req, res) {
   const rat = new Rating({
@@ -472,16 +480,16 @@ app.post("/rat/:bid", function (req, res) {
   });
   rat.save();
   var bid = req.params.bid;
-  Book.findOneAndUpdate(
-    { _id: bid },
-    { $push: { ratings: rat } },
-    function (err, success) {
-      if (err) {
-        console.log(err);
-      } 
-
-    });
-  res.redirect('back');
+  Book.findOneAndUpdate({ _id: bid }, { $push: { ratings: rat } })
+  .then(success => {
+    // Handle success
+    res.redirect('back');
+  })
+  .catch(err => {
+    // Handle error
+    console.log(err);
+    res.status(500).send('Internal Server Error');
+  });
 });
 app.get("/del/:bid/:cid/:author", function (req, res) {
   var bid1 = req.params.bid;
@@ -490,22 +498,28 @@ app.get("/del/:bid/:cid/:author", function (req, res) {
   if (author1 === req.user.username) {
     Book.findOneAndUpdate(
       { _id: bid1 },
-      { $pull: { comments: { _id: cid1 } } }, { 'new': true }, function (err) {
-        if (err) {
-          console.log(err);
-        }
-        
-
-      });
-    Comment.deleteOne({ _id: cid1 }, function (err) {
-      if (err) {
+      { $pull: { comments: { _id: cid1 } } },
+      { new: true }
+    )
+      .then(updatedBook => {
+        // Handle the updated book if needed
+        console.log("Book updated:", updatedBook);
+  
+        // Now, delete the comment
+        return Comment.deleteOne({ _id: cid1 });
+      })
+      .then(deletedComment => {
+        // Handle the deleted comment if needed
+        console.log("Comment deleted:", deletedComment);
+  
+        // Redirect back after both operations are completed
+        res.redirect('back');
+      })
+      .catch(err => {
         console.log(err);
-      } 
-
-    });
+        res.status(500).send('Internal Server Error');
+      });
   }
-
-  res.redirect('back');
 });
 app.post("/book", function (req, res) {
   var loc = __dirname + "/books/" + req.body.bname + ".pdf";
@@ -528,11 +542,16 @@ app.post("/book", function (req, res) {
       if (err) {
         console.log(err)
       } else {
-        Book.find({}, function (err, books) {
+        
+        Book.find({})
+        .then(books => {
           res.render("bdisplay", {
             books: books,
             message: 'Book Uploaded Successfully'
           });
+        }).catch(err => {
+          console.error(err);
+          res.status(500).send('Internal Server Error');
         });
       }
     });
@@ -556,10 +575,8 @@ app.get("/del/:bid", function (req, res) {
 });
 app.get("/booktemplate/:bid", async (req, res) => {
   var bid1 = req.params.bid;
-  Book.findOne({ _id: bid1 }, function (err, book) {
-    if (err) {
-      console.log(err);
-    } else{
+  Book.findOne({ _id: bid1 })
+  .then(book => {
       var c = 0;
       var ratsum = 0;
           book.ratings.forEach(function (rating) {
@@ -576,8 +593,10 @@ app.get("/booktemplate/:bid", async (req, res) => {
         rating: avR,
         num:c
       });
-    }
-  });
+    }).catch(err => {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    });
 });
 app.get("/bdisplay", function (req, res) {
   if (req.isAuthenticated()) {
