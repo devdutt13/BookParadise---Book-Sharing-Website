@@ -294,57 +294,106 @@ app.post("/register", async function (req, res) {
   }
 });
 
-app.post("/reset", function (req, res) {
-  User.findOne({ username: req.body.username, phoneno:req.body.phoneno }, function (err, regUser) {
-    if (err) {
-      console.log(err);
-    } else if (regUser) {
-      if(req.body.password===req.body.cpassword){
-        User.findOneAndUpdate({username:req.body.username },  
-          {password:req.body.password}, null, function (err) { 
-          if (err){ 
-              console.log(err) 
-          } else{
-            res.render('login', { message: 'Password Successfully Reset. Login to Continue' });
-          }
-        });
-      }else{
-        res.render('forgot', { message: 'Password Mismatch' });
-      }
-      
-    } else {
-      res.render('forgot', { message: 'Username or Phone Number did not match. Try Again' });
-      }
-    
-  });
+app.post("/reset", async function (req, res) {
+  try {
+    const regUser = await User.findOne({ username: req.body.username, phoneno: req.body.phoneno });
 
-});
+    if (!regUser) {
+      throw new Error('Username or Phone Number did not match. Try Again');
+    }
 
-app.post("/changepass", function (req, res) {
-  User.findOne({ password: req.body.password}, function (err, regUser) {
-    if (err) {
-      console.log(err);
-    } else if (regUser) {
-      if(req.body.npassword===req.body.cpassword){
-        User.findOneAndUpdate({password: req.user.password },  
-          {password:req.body.npassword}, null, function (err) { 
-          if (err){ 
-              console.log(err) 
-          } else{
-            req.logout();
-            res.render('login', { message: 'Password Successfully Changed. Login to Continue' });
-      
-          }
-        });
-      }else{
-        res.render('changepass', { message: 'Check Confirm Password Again' });
-      
-    }  
-  }else{
-    res.render('changepass', { message: 'Wrong Current Password' });
+    if (req.body.password !== req.body.cpassword) {
+      throw new Error('Password Mismatch');
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    await User.findOneAndUpdate({ username: req.body.username }, { password: hashedPassword });
+
+    res.render('login', { message: 'Password Successfully Reset. Login to Continue' });
+  } catch (err) {
+    console.error(err);
+    res.render('forgot', { message: err.message || 'Internal Server Error' });
   }
-  });
 });
+
+
+app.post("/changepass", async function (req, res) {
+  const hashedPassword = await bcrypt.hash(req.body.npassword, 10);
+
+  // Find the user based on some identifier like username or user ID
+  User.findOne({ username: req.user.username })
+    .then((regUser) => {
+      if (!regUser) {
+        // User not found
+        return res.status(404).send('User not found');
+      }
+
+      // Assuming the user is found, check if the entered current password is correct
+      bcrypt.compare(req.body.password, regUser.password, function (err, result) {
+        if (err) {
+          console.error(err);
+          return res.status(500).send('Internal Server Error');
+        }
+
+        if (result) {
+          // Current password is correct, update the password
+          User.findOneAndUpdate(
+            { username: req.user.username },
+            { password: hashedPassword },
+            { new: true } // To return the updated document
+          )
+            .then((updatedUser) => {
+              // Logout and render login page with success message
+              req.logout(function (err) {
+                if (err) {
+                  console.error(err);
+                  return res.status(500).send('Internal Server Error');
+                }
+                res.render('login', { message: 'Password Successfully Changed. Login to Continue' });
+              });
+            })
+            .catch((error) => {
+              console.error(error);
+              res.status(500).send('Internal Server Error');
+            });
+        } else {
+          // Current password is incorrect
+          res.render('changepass', { message: 'Current Password is Incorrect' });
+        }
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// app.post("/changepass", function (req, res) {
+//   User.findOne({ password: req.body.password}, function (err, regUser) {
+//     if (err) {
+//       console.log(err);
+//     } else if (regUser) {
+//       if(req.body.npassword===req.body.cpassword){
+//         User.findOneAndUpdate({password: req.user.password },  
+//           {password:req.body.npassword}, null, function (err) { 
+//           if (err){ 
+//               console.log(err) 
+//           } else{
+//             req.logout();
+//             res.render('login', { message: 'Password Successfully Changed. Login to Continue' });
+      
+//           }
+//         });
+//       }else{
+//         res.render('changepass', { message: 'Check Confirm Password Again' });
+      
+//     }  
+//   }else{
+//     res.render('changepass', { message: 'Wrong Current Password' });
+//   }
+//   });
+// });
 
 // app.post('/login', function(req, res, next) {
 //   passport.authenticate('local-login', function(err, user, info) {
