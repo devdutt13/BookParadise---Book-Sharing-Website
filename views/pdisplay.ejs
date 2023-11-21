@@ -24,7 +24,7 @@
                      <!-- <button ><a href="/passdisplay/<%=pshow %>"><%=pshow%></a></button> -->
                      <label class="text-xl font-medium" for="books">Books Uploaded</label>
                      <% books.forEach(function(book){ %>
-                      <div>
+                        <div>
                             <a class="text-base mb-4 mr-4" href="booktemplate/<%=book.btitle %>"> <i> <%=book.btitle %> </i></a> 
                             <a href="/del/<%=book._id %>"><i style="font-size:18px;color:red" class="fa fa-trash-o"></i></a>
                         </div>

@@ -1,26 +1,46 @@
 <%- include("menu") -%>
 <head>
     <title>Forgot Password</title>
-    <link rel="stylesheet" href="/css/fstyle.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
-        <div class="form1"> 
-            <h1>Change Password</h1>
-            <% if (message.length > 0) { %>
-            <h2><%= message %></h2>
-            <% } %>
-            <form action="/changepass" method="POST">
-                <label for="password">Current Password</label>
-                <input type="password" name="password" required> 
-                <label for="npassword">New Password</label>
-                <input type="password" name="npassword" required> 
-                <label for="cpassword">Confirm New Password</label>
-                <input type="password" name="cpassword" required> 
-                <button class="button1" type="submit" name="submit">Reset</button>
-                <a href="/profile"><-Back to Profile</a>
-                </form>
+<body class="bg-slate-700">
+    <div class="bg-grey-lighter min-h-screen flex flex-col">
+        <div class="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
 
-        </div>
+            
+       
+            <form class="bg-white px-6 py-8 rounded shadow-md text-black w-full" action="/changepass" method="POST">
+                <h1 class="mb-8 text-3xl text-center">Change Password</h1>
+                     <% if (message.length > 0) { %>
+                            <h2><%= message %></h2>
+                        <% } %>
+                <input 
+                class="block border border-grey-light w-full p-3 rounded mb-4" 
+                type="password" 
+                name="password" 
+                placeholder="Current Password" required> 
+                <input 
+                class="block border border-grey-light w-full p-3 rounded mb-4" 
+                type="password" 
+                name="npassword" 
+                placeholder="New Password" required> 
+
+                <input 
+                class="block border border-grey-light w-full p-3 rounded mb-4" 
+                type="password" 
+                name="cpassword" 
+                placeholder="Confirm Password" required> 
+                <button class="w-full text-center py-3 rounded bg-green-700 text-white hover:bg-green-dark focus:outline-none my-1" 
+                type="submit" name="submit">Reset</button>
+                <div class="text-center text-sm text-grey-dark mt-2">
+                        <a class="no-underline border-b border-grey-dark text-grey-dark" href="/profile">
+                               Back to Profile
+                        </a>
+                </div>   
+            </form>
+
+         </div>
+    </div>
     
 </body>
 </html>
