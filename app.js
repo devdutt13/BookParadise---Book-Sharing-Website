@@ -615,12 +615,13 @@ app.get("/book", function (req, res) {
 });
 app.get("/del/:bid", function (req, res) {
   var bid1 = req.params.bid;
-     Book.deleteOne({ _id: bid1 }, function (err) {
-      if (err) {
-        console.log(err);
-      } 
+     Book.deleteOne({ _id: bid1 }).then(success => {
+      res.redirect('back');
+    }).catch(err =>{
+      console.error(err);
+      res.status(500).send('Internal Server Error');
     });
-  res.redirect('back');
+  
 });
 app.get("/booktemplate/:bid", async (req, res) => {
   var bid1 = req.params.bid;
