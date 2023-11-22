@@ -588,7 +588,7 @@ app.post("/book", function (req, res) {
     var file = req.files.bookfile
     var filename = req.body.bname + ".pdf"
   
-    file.mv('./books/' + filename, function (err) {
+    file.mv('./public/books/' + filename, function (err) {
       if (err) {
         console.log(err)
       } else {
