@@ -4,9 +4,11 @@
   "description": "A book sharing website created using NodeJS, EJS, ExpressJS and MongoDB. <br>\r The website allows users to: <br>\r •\tTo sign up and become a registered user and then login later to use website <br>\r •\tTo download the books they want (if available on website) and upload books they want to share with others on website  <br>\r •\tTo write reviews about the books and have discussions with other users about it through comments <br>\r •\tTo read about lives of famous authors <br>",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "build": "npm install",
     "build:css": "postcss public/css/austyle.css -o public/css/output.css",
     "tailwind:css": "postcss public/css/tailwind.css -o public/css/style.css"
+    
   },
   "keywords": [],
   "author": "",
@@ -16,6 +18,7 @@
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "connect-flash": "^0.1.1",
+    "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.2",

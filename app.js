@@ -1,5 +1,5 @@
 //jshint esversion:6
-
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
@@ -11,7 +11,8 @@ const passport = require("passport");
 const bcrypt = require('bcrypt');
 const passportLocalMongoose = require("passport-local-mongoose");
 const app = express();
- const LocalStrategy = require('passport-local').Strategy;
+const LocalStrategy = require('passport-local').Strategy;
+const port = process.env.PORT || 3000; 
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -29,7 +30,7 @@ app.use(passport.session());
 
 
 
-mongoose.connect("mongodb://localhost:27017/newDB", { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const userSchema = new mongoose.Schema({
   name: String,
@@ -669,13 +670,13 @@ app.get("/bdisplay", function (req, res) {
 
 app.get("/downld/:btitle", async (req, res) => {
   var title = req.params.btitle + ".pdf";
-  var path = __dirname + "/books/" + title;
+  var path = __dirname + "/public/books/" + title;
   res.download(path, title, function (err) {
     if (err) {
       console.log(err);
     }
   });
 });
-app.listen(3000, function () {
+app.listen(port, function () {
   console.log("Server started on port 3000");
 });
