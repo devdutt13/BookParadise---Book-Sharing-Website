@@ -110,6 +110,9 @@ const bookSchema = new mongoose.Schema({
   bloc: String
 });
 const Book = mongoose.model("Book", bookSchema);
+app.get("/", function (req, res) {
+  res.render('home');
+})
 app.get("/home", function (req, res) {
   res.render('home');
 })
