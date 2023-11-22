@@ -79,32 +79,12 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-// var LocalStrategy    = require('passport-local').Strategy
-// passport.use('local-login', new LocalStrategy({
-//     passReqToCallback : true 
-// },
-// function(req, username, password, done) {
-//     User.findOne({ 'username' :  username }, function(err, user) {
-//         if (err)
-//             return done(err);
-//         if (!user)
-//             return done(null, false,{message: 'User  not Found'}); 
-//         if (user.password!=password)
-//             return done(null, false, {message: 'Incorrect Password'}); 
-//         return done(null, user);
-//     });
-//   }
-// ));
+
 app.use(function (req, res,next){
   res.locals.currentUser = req.user;
   next();
 })
-function isLoggedIn(req,res,next) {
-  if(req.isAuthenticated()){
-      return next();
-  }
-  res.redirect("/login");
-}
+
 const commentSchema = new mongoose.Schema({
   title: String,
   author: String,
@@ -166,7 +146,12 @@ app.get("/forgot", function (req, res) {
   res.render('forgot', { message:" " });
 });
 app.get("/changepass", function (req, res) {
-  res.render('changepass', { message:" " });
+  if (req.isAuthenticated()) {
+    res.render('changepass', { message:" " });
+  } else {
+    res.redirect("login");
+  }
+ 
 });
 app.get("/tc", function (req, res) {
   res.render('tc');
@@ -175,17 +160,23 @@ app.get("/tcbook", function (req, res) {
   res.render('tcupload');
 });
 app.get("/profile", function (req, res) {
-  Book.find({buploader:req.user.username}). then(books => {
-    res.render("pdisplay", {
-      books: books,
-      pass: '***********',
-      pshow:'Show',
-      message:''
+  if (req.isAuthenticated()) {
+    Book.find({buploader:req.user.username}). then(books => {
+      res.render("pdisplay", {
+        books: books,
+        pass: '***********',
+        pshow:'Show',
+        message:''
+      });
+    }).catch(err => {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
     });
-  }).catch(err => {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
-  });;
+    
+  } else {
+    res.redirect("login");
+  }
+  
 });
 app.get("/passdisplay/:pshw", function (req, res) {
   pshow1=req.params.pshw
@@ -212,58 +203,7 @@ app.get("/passdisplay/:pshw", function (req, res) {
   }
   
 });
-// app.post("/register", function (req, res) {
-//   User.findOne({ username: req.body.username }, function (err, regUser) {
-//     if (err) {
-//       console.log(err);
-//     } else if (regUser) {
-//       res.render('register', { message: 'Username Exists' });
-//     }
-//     else if (req.body.password != req.body.cpassword) {
-//       res.render('register', { message: 'Password Mismatch' });
-//     }
-//     else {
-//       const reg = new User({
-//         name: req.body.name,
-//         username: req.body.username,
-//         password: req.body.password,
-//         phoneno:req.body.phoneno,
-//         TC: req.body.tc
-//       });
-//       reg.save();
-//       res.render('login',{ message: 'Registration Successful! Please Login to continue'});
-//     }
-//   });
 
-// });
-// app.post("/register", async function (req, res) {
-//   try {
-//     const regUser = await User.findOne({ username: req.body.username });
-
-//     if (regUser) {
-//       return res.render('register', { message: 'Username Exists' });
-//     }
-
-//     if (req.body.password !== req.body.cpassword) {
-//       return res.render('register', { message: 'Password Mismatch' });
-//     }
-
-//     const reg = new User({
-//       name: req.body.name,
-//       username: req.body.username,
-//       password: req.body.password,
-//       phoneno: req.body.phoneno,
-//       TC: req.body.tc
-//     });
-
-//     await reg.save();
-
-//     res.render('login', { message: 'Registration Successful! Please Login to continue' });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send('Internal Server Error');
-//   }
-// });
 app.post("/register", async function (req, res) {
   try {
     const regUser = await User.findOne({ username: req.body.username });
@@ -370,68 +310,6 @@ app.post("/changepass", async function (req, res) {
     });
 });
 
-// app.post("/changepass", function (req, res) {
-//   User.findOne({ password: req.body.password}, function (err, regUser) {
-//     if (err) {
-//       console.log(err);
-//     } else if (regUser) {
-//       if(req.body.npassword===req.body.cpassword){
-//         User.findOneAndUpdate({password: req.user.password },  
-//           {password:req.body.npassword}, null, function (err) { 
-//           if (err){ 
-//               console.log(err) 
-//           } else{
-//             req.logout();
-//             res.render('login', { message: 'Password Successfully Changed. Login to Continue' });
-      
-//           }
-//         });
-//       }else{
-//         res.render('changepass', { message: 'Check Confirm Password Again' });
-      
-//     }  
-//   }else{
-//     res.render('changepass', { message: 'Wrong Current Password' });
-//   }
-//   });
-// });
-
-// app.post('/login', function(req, res, next) {
-//   passport.authenticate('local-login', function(err, user, info) {
-//     if (err) { return next(err) }
-//     if (!user) {
-//       return res.render('login', { message: info.message })
-//     }
-//     req.logIn(user, function(err) {
-//       if (err) { 
-//         return next(err); }
-//       return res.redirect('/home');
-//     });
-//   })(req, res, next);
-// });
-
-// const authenticateAsync = (req, res, next) => {
-//   return new Promise((resolve, reject) => {
-//     passport.authenticate('local-login', (err, user, info) => {
-//       if (err) {
-//         reject(err);
-//       }
-//       if (!user) {
-//         res.render('login', { message: info.message });
-//         resolve(); // Resolving the promise since rendering is complete
-//       } else {
-//         req.logIn(user, (err) => {
-//           if (err) {
-//             reject(err);
-//           } else {
-//             res.redirect('/home');
-//             resolve(); // Resolving the promise since redirecting is complete
-//           }
-//         });
-//       }
-//     })(req, res, next);
-//   });
-// };
 
 app.post('/login', function (req, res, next) {
   passport.authenticate('local-login', function (err, user, info) {
@@ -501,11 +379,12 @@ app.post("/bsearch", function (req, res) {
 });
 
  app.post("/com/:bid", function (req, res) {
+ const author = req.user ? req.user.username : 'Anonymous';
  var date= new Date().toLocaleDateString();
   const com = new Comment({
     title: req.body.ctitle,
     comment: req.body.cbody,
-    author: req.user.username,
+    author: author,
     date: date
 
   });
@@ -523,9 +402,10 @@ app.post("/bsearch", function (req, res) {
  
 });
 app.post("/rat/:bid", function (req, res) {
+  const author = req.user ? req.user.username : 'Anonymous';
   const rat = new Rating({
     value: req.body.rating,
-    author: req.user.username
+    author: author
 
   });
   rat.save();
@@ -545,7 +425,8 @@ app.get("/del/:bid/:cid/:author", function (req, res) {
   var bid1 = req.params.bid;
   var cid1 = req.params.cid;
   var author1 = req.params.author;
-  if (author1 === req.user.username) {
+  const author = req.user ? req.user.username : 'Anonymous';
+  if (author1 === author) {
     Book.findOneAndUpdate(
       { _id: bid1 },
       { $pull: { comments: { _id: cid1 } } },
@@ -569,10 +450,12 @@ app.get("/del/:bid/:cid/:author", function (req, res) {
         console.log(err);
         res.status(500).send('Internal Server Error');
       });
+  }else{
+    res.redirect('back');
   }
 });
-app.post("/book", function (req, res) {
-  var loc = __dirname + "/books/" + req.body.bname + ".pdf";
+app.post("/book", async function (req, res) {
+  var loc = __dirname + "/public/books/" + req.body.bname + ".pdf";
   const book = new Book({
     btitle: req.body.bname,
     bauthor: req.body.author,
@@ -582,29 +465,28 @@ app.post("/book", function (req, res) {
     TC: req.body.tc,
     bloc: loc
   });
-  book.save();
+  await book.save();
   
   if (req.files) {
     var file = req.files.bookfile
     var filename = req.body.bname + ".pdf"
   
-    file.mv('./public/books/' + filename, function (err) {
+    file.mv('./public/books/' + filename, async function (err) {
       if (err) {
         console.log(err)
       } else {
         
-        Book.find({})
-        .then(books => {
+      try {
+          const books = await Book.find({});
           res.render("bdisplay", {
             books: books,
             message: 'Book Uploaded Successfully'
           });
-        }).catch(err => {
+        } catch (err) {
           console.error(err);
           res.status(500).send('Internal Server Error');
-        });
-      }
-    });
+        }
+    }});
   }
 });
 app.get("/book", function (req, res) {
@@ -649,8 +531,25 @@ app.get("/booktemplate/:bid", async (req, res) => {
       res.status(500).send('Internal Server Error');
     });
 });
+// app.get("/bdisplay", function (req, res) {
+//   if (req.isAuthenticated()) {
+//     Book.find({})
+//       .then(books => {
+//         res.render("bdisplay", {
+//           books: books,
+//           message: ' '
+//         });
+//       })
+//       .catch(err => {
+//         console.error(err);
+//         res.status(500).send('Internal Server Error');
+//       });
+//   } else {
+//     res.redirect("login");
+//   }
+// });
+
 app.get("/bdisplay", function (req, res) {
-  if (req.isAuthenticated()) {
     Book.find({})
       .then(books => {
         res.render("bdisplay", {
@@ -662,11 +561,8 @@ app.get("/bdisplay", function (req, res) {
         console.error(err);
         res.status(500).send('Internal Server Error');
       });
-  } else {
-    res.redirect("login");
-  }
+  
 });
-
 
 app.get("/downld/:btitle", async (req, res) => {
   var title = req.params.btitle + ".pdf";

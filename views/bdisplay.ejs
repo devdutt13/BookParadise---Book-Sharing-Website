@@ -9,7 +9,7 @@
             <h1 class="text-slate-200 text-4xl font-bold mb-8 text-center mt-4">Book Collection</h1>
             
             <% if (message.length > 0) { %>
-            <h2><%= message %></h2>
+            <h2 class="text-slate-200 text-xl font-bold mb-8 text-center mt-4"><%= message %></h2>
             <% } %>
             <form class="flex" action="/bsearch" method="POST">
                 <input class="block border border-grey-light w-2/5 p-2 rounded ml-96 mb-4 mr-2" type="text" name="searchquery" placeholder="Search By Book Name, Author, Genre"> 
