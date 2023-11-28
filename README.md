@@ -1,6 +1,7 @@
-# BookShare Website
+# BookParadise---Book-Sharing-Website
 
-Welcome to **BookShare**, a book sharing platform where users can discover, share, and discuss their favorite books. This web application is built using NodeJS, EJS, ExpressJS, and MongoDB to provide a seamless and interactive experience for book enthusiasts.
+
+Welcome to **BookParadise**, a book sharing platform where users can discover, share, and discuss their favorite books. This web application is built using NodeJS, EJS, ExpressJS, and MongoDB to provide a seamless and interactive experience for book enthusiasts.
 
 ## Features
 
